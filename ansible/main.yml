@@ -1,0 +1,7 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+  roles:
+    - update
+    # Define your ansible roles here and put roles in /roles

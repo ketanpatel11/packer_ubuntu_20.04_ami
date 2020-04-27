@@ -1,0 +1,54 @@
+{
+  "variables": {
+    "region": "${region}",
+    "vpc_id": "${vpc_id}",
+    "subnet_id": "${subnet_id}",
+    "destination_regions": "${destination_regions}",
+    "aws_access_key": "${aws_access_key}",
+    "aws_secret_key": "${aws_secret_key}",
+    "ami_name": "${ami_name}"
+  },
+  "builders": [
+    {
+      "name": "ubuntu_20.04",
+      "type": "amazon-ebs",
+      "region": "{{user `region`}}",
+      "vpc_id": "{{user `vpc_id`}}",
+      "subnet_id": "{{user `subnet_id`}}",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "associate_public_ip_address": true,
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*",
+          "root-device-type": "ebs"
+        },
+        "owners": [
+          "099720109477"
+        ],
+        "most_recent": true
+      },
+      "spot_price": "auto",
+      "spot_price_auto_product": "Linux/UNIX (Amazon VPC)",
+      "instance_type": "t3.micro",
+      "ami_regions": "{{user `destination_regions`}}",
+      "ssh_username": "ubuntu",
+      "ami_name": "{{user `ami_name`}}-{{isotime \"2006-01-02\"}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "scripts/ansible.sh"
+    },
+    {
+      "type": "ansible",
+      "playbook_file": "ansible/main.yml"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/cleanup.sh"
+    }
+  ]
+}

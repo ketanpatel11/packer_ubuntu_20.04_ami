@@ -1,0 +1,9 @@
+{
+  "ami_name": "",
+  "aws_access_key": "",
+  "aws_secret_key": "",
+  "region": "",
+  "vpc_id": "",
+  "subnet_id": "",
+  "destination_regions": ""
+}
